@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if latest_question_list %}
+    <ul>
+        {% for question in latest_question_list %}
+<!--            <li><a href="/polls/{{question_id}}">{{ question.question_text }}</a></li>-->
+<!--        因为在polls/urls.py中用path()函数通过name参数为URL定义了名字，所以可以使用/{% url %/}代替上面的硬编码-->
+<!--            <li><a href="/{% url 'detail'  question.id %/}">{{ question.question_text }}</a></li>-->
+<!--        使用命名空间指向具体的应用 'polls:detail'-->
+                <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+</body>
+</html>
