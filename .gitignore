@@ -1,1 +1,10 @@
+# 忽略Python编译文件
+*.pyc
 __pychace__/
+
+# 忽略数据库文件
+db.sqlite3
+
+static/
+
+.idea/
