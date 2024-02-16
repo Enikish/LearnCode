@@ -6,6 +6,7 @@ from django.views import generic
 from .models import Question, Choice
 from django.template import loader
 from django.http import Http404
+from django.utils import timezone
 
 
 class IndexView(generic.ListView):
@@ -13,12 +14,23 @@ class IndexView(generic.ListView):
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        return Question.objects.order_by("-pub_date")[:5]
+        # 返回最近5个发布的question
+        # return Question.objects.order_by("-pub_date")[:5]
+        """
+        return the last five published questions (not including those set to be published in the future)
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
+
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultsView(generic.DetailView):
@@ -72,7 +84,7 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        template = loader.get_template("polls/results.html")
+        # template = loader.get_template("polls/results.html")
         context = {
             "question.id": question.id,
         }
